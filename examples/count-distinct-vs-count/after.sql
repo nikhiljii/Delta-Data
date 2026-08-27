@@ -1,3 +1,4 @@
+-- CI activation test comment (safe to ignore) 2026-08-27T15:03:31.059Z
 -- AFTER: silently switched to counting order rows, not unique customers
 SELECT COUNT(customer_id) AS customer_count
 FROM orders;
