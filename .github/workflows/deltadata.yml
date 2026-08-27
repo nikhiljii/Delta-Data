@@ -1,0 +1,40 @@
+# Runs the DeltaData CLI against this repo's own bundled
+# examples/count-distinct-vs-count scenario against a live DeltaData API, so
+# opening a PR here demonstrates a real finding end-to-end (it deliberately
+# fails, since that scenario is a HIGH-risk change -- that's the point of
+# running it). This is a demo/template, not a project-specific PR gate: it
+# always compares the same bundled before/after files no matter which .sql
+# file actually changed in the PR. Point the `deltadata compare` step at
+# your own SQL/data once it reflects your project's real files -- see
+# README.md#ci-usage-github-actions for that version.
+name: DeltaData behavioral check
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - "**/*.sql"
+
+jobs:
+  deltadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install DeltaData CLI
+        run: pip install -e ./cli
+
+      - name: Run behavioral diff
+        env:
+          DELTADATA_API_URL: ${{ secrets.DELTADATA_API_URL }}
+          DELTADATA_API_KEY: ${{ secrets.DELTADATA_API_KEY }}
+        run: |
+          deltadata compare \
+            --before examples/count-distinct-vs-count/before.sql \
+            --after examples/count-distinct-vs-count/after.sql \
+            --data examples/count-distinct-vs-count/orders.csv \
+            --fail-on high
