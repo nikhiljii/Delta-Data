@@ -1,0 +1,19 @@
+[project]
+name = "deltadata-cli"
+version = "0.1.0"
+description = "Command-line interface for DeltaData -- behavioral regression testing for SQL, designed for local dev and CI."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "httpx>=0.24",
+]
+
+[project.scripts]
+deltadata = "deltadata_cli.cli:run"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatchling.build.targets.wheel]
+packages = ["deltadata_cli"]

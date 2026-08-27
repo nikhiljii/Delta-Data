@@ -1,0 +1,9 @@
+order_id,customer_id,region,quantity,price
+1,1,West,2,19.99
+2,1,East,1,9.99
+3,2,East,3,14.50
+4,2,East,1,14.50
+5,3,West,5,4.25
+6,4,South,2,29.00
+7,4,South,1,29.00
+8,5,North,1,49.99

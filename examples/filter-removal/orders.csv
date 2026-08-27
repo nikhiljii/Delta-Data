@@ -1,0 +1,11 @@
+order_id,status,quantity,price
+1,completed,2,19.99
+2,completed,1,9.99
+3,completed,3,14.50
+4,cancelled,1,14.50
+5,completed,5,4.25
+6,refunded,2,29.00
+7,completed,1,29.00
+8,cancelled,1,49.99
+9,completed,2,12.00
+10,refunded,3,12.00
