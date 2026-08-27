@@ -1,0 +1,47 @@
+# Publishes the `deltadata` CLI (cli/) to PyPI whenever a `cli-vX.Y.Z` tag
+# is pushed. Uses PyPI Trusted Publishing (OIDC) -- no PyPI token is stored
+# in this repo. See cli/RELEASING.md for the full release process and the
+# one-time trusted-publisher setup on pypi.org.
+name: Publish CLI to PyPI
+
+on:
+  push:
+    tags:
+      - "cli-v*.*.*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/deltadata/
+    permissions:
+      id-token: write # required for PyPI Trusted Publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build
+
+      - name: Verify tag matches package version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#cli-v}"
+          PKG_VERSION="$(python -c "import re,sys; sys.path.insert(0,'cli'); from deltadata_cli import __version__; print(__version__)")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "Tag cli-v$TAG_VERSION does not match deltadata_cli.__version__ ($PKG_VERSION)" >&2
+            exit 1
+          fi
+
+      - name: Build sdist and wheel
+        working-directory: cli
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: cli/dist

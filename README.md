@@ -76,7 +76,7 @@ does; their source isn't published here.
 
 | | |
 |---|---|
-| **Published here** | `cli/` (the `deltadata` command), `examples/`, this documentation, the GitHub Action |
+| **Published here** | `cli/` (the `deltadata` command, also on [PyPI](https://pypi.org/project/deltadata/)), `examples/`, this documentation, the GitHub Action |
 | **Hosted, not published** | The analysis engine, the web UI, `/api/v1/compare`'s implementation |
 
 You need a running DeltaData API (the [hosted demo](https://delta-data.replit.app/)
@@ -162,8 +162,12 @@ The CLI lives in [`cli/`](cli/) as an installable Python package that talks
 to the API over HTTP — it never touches the analysis engine directly.
 
 ```bash
-pip install -e ./cli
+pip install deltadata
 ```
+
+Installs the `deltadata` command straight from [PyPI](https://pypi.org/project/deltadata/)
+— no repo clone required. (Contributing to the CLI itself? See
+[CONTRIBUTING.md](CONTRIBUTING.md) for an editable install from source.)
 
 ```bash
 deltadata compare \
@@ -202,16 +206,19 @@ The CLI is deliberately just a plain command — `deltadata compare ...` — so
 wiring it into CI needs nothing DeltaData-specific beyond installing it and
 setting two secrets.
 
-**Try the shipped demo first.** This repo includes a working, manually
-triggered workflow at `.github/workflows/deltadata.yml`. Open the Actions
-tab → "DeltaData behavioral check (manual demo)" → "Run workflow" and it
-installs the CLI and runs it against the bundled
-`examples/count-distinct-vs-count` scenario against a live DeltaData API —
-it deliberately fails, because that scenario is a real HIGH-risk change,
-which is the point of running it. (Replit's GitHub connector isn't granted
-the `workflow` OAuth scope, so this one file has to be added to your
-fork/clone by hand — via GitHub's web editor, or a git push with a personal
-access token that has the `workflow` scope.)
+**Try the shipped demo first.** This repo includes a working workflow at
+`.github/workflows/deltadata.yml` that runs on `workflow_dispatch` (Actions
+tab → "DeltaData behavioral check" → "Run workflow") *and* automatically on
+any pull request that touches a `.sql` file. Either way it installs the CLI
+and runs it against the bundled `examples/count-distinct-vs-count` scenario
+against a live DeltaData API — it deliberately fails, because that scenario
+is a real HIGH-risk change, which is the point of running it. It always
+compares the same bundled before/after files regardless of which `.sql` file
+the PR actually changed; see below for pointing it at your own project's
+files instead. (Replit's GitHub connector isn't granted the `workflow` OAuth
+scope, so this one file has to be added to a fork/clone by hand — via
+GitHub's web editor, or a git push with a personal access token that has the
+`workflow` scope.)
 
 **Turn it into a real PR gate for your own project** by pointing the same
 command at your own SQL/data instead of the bundled example, and switching
@@ -236,7 +243,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install DeltaData CLI
-        run: pip install -e ./cli
+        run: pip install deltadata
 
       - name: Run behavioral diff
         env:

@@ -8,11 +8,15 @@ regression testing for SQL. This package is a thin HTTP client: every
 See the [repository README](../README.md#cli-usage) for full usage, exit
 codes, and CI examples.
 
-## Install (local / CI)
+## Install
 
 ```bash
-pip install -e ./cli
+pip install deltadata
 ```
+
+This installs the `deltadata` command from [PyPI](https://pypi.org/project/deltadata/)
+— no repo clone needed. See [`RELEASING.md`](RELEASING.md) for how new
+versions ship.
 
 ## Quick start
 

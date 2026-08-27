@@ -20,7 +20,9 @@ split).
 
 The CLI is a small, dependency-light Python package that talks to a running
 DeltaData API over HTTP — it does not need the engine or a database to
-develop against.
+develop against. (Just want to *use* the CLI, not modify it? `pip install
+deltadata` from [PyPI](https://pypi.org/project/deltadata/) — no clone
+needed; see [README.md#cli-usage](README.md#cli-usage).)
 
 ```bash
 git clone https://github.com/nikhiljii/Delta-Data.git
@@ -39,6 +41,12 @@ cd cli
 pip install -e .
 pytest tests/
 ```
+
+## Releasing the CLI
+
+Maintainers cutting a new `deltadata` release should follow
+[`cli/RELEASING.md`](cli/RELEASING.md) — it covers versioning, the
+CHANGELOG, and the tag-triggered PyPI publish workflow.
 
 ## Adding an example
 
