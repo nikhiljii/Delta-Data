@@ -200,17 +200,30 @@ echo "exit code: $?"
 
 The CLI is deliberately just a plain command — `deltadata compare ...` — so
 wiring it into CI needs nothing DeltaData-specific beyond installing it and
-setting two secrets. A ready-to-use version of this workflow lives in the
-Replit project at `.github/workflows/deltadata.yml`; because Replit's
-GitHub connector isn't granted the `workflow` OAuth scope, that one file
-couldn't be auto-published here — copy it into your fork/clone under
-`.github/workflows/` (via GitHub's web editor, or a git push with a
-personal access token that has the `workflow` scope) to activate it:
+setting two secrets.
+
+**Try the shipped demo first.** This repo includes a working, manually
+triggered workflow at `.github/workflows/deltadata.yml`. Open the Actions
+tab → "DeltaData behavioral check (manual demo)" → "Run workflow" and it
+installs the CLI and runs it against the bundled
+`examples/count-distinct-vs-count` scenario against a live DeltaData API —
+it deliberately fails, because that scenario is a real HIGH-risk change,
+which is the point of running it. (Replit's GitHub connector isn't granted
+the `workflow` OAuth scope, so this one file has to be added to your
+fork/clone by hand — via GitHub's web editor, or a git push with a personal
+access token that has the `workflow` scope.)
+
+**Turn it into a real PR gate for your own project** by pointing the same
+command at your own SQL/data instead of the bundled example, and switching
+the trigger to `pull_request`:
 
 ```yaml
-# .github/workflows/deltadata.yml
+# .github/workflows/deltadata.yml -- adapt to your own files, not the demo above
 name: DeltaData behavioral check
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - "sql/**/*.sql" # narrow this to wherever your tracked SQL actually lives
 
 jobs:
   deltadata:
@@ -237,10 +250,14 @@ jobs:
             --fail-on high
 ```
 
-Because `deltadata compare` exits non-zero when the risk threshold is
-exceeded (or the SQL fails to execute), this step fails the pull request
-check on its own — no extra scripting needed. The eventual PR workflow this
-sets up for:
+`sql/before.sql`, `sql/after.sql`, and `sql/sample_orders.csv` are
+placeholders for wherever your project keeps its old/new query and sample
+data — DeltaData doesn't (yet) diff arbitrary changed files in a PR
+automatically, so this template always compares two fixed paths that you
+choose. Because `deltadata compare` exits non-zero when the risk threshold
+is exceeded (or the SQL fails to execute), this step fails the pull request
+check on its own once it points at real files — no extra scripting needed.
+The eventual PR workflow this sets up for:
 
 ```text
 Developer changes SQL -> opens PR -> DeltaData detects the SQL change
