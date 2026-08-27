@@ -200,8 +200,12 @@ echo "exit code: $?"
 
 The CLI is deliberately just a plain command — `deltadata compare ...` — so
 wiring it into CI needs nothing DeltaData-specific beyond installing it and
-setting two secrets. This is a documented example, not a published GitHub
-Action:
+setting two secrets. A ready-to-use version of this workflow lives in the
+Replit project at `.github/workflows/deltadata.yml`; because Replit's
+GitHub connector isn't granted the `workflow` OAuth scope, that one file
+couldn't be auto-published here — copy it into your fork/clone under
+`.github/workflows/` (via GitHub's web editor, or a git push with a
+personal access token that has the `workflow` scope) to activate it:
 
 ```yaml
 # .github/workflows/deltadata.yml
