@@ -11,6 +11,12 @@ the CLI reaches 1.0.0.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-31
+
+### Changed
+
+- Verified the automated PyPI Trusted Publishing release path.
+
 ## [0.1.1] - 2026-08-31
 
 ### Fixed
