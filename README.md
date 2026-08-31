@@ -76,7 +76,7 @@ does; their source isn't published here.
 
 | | |
 |---|---|
-| **Published here** | `cli/` (the `deltadata` command and its PyPI release configuration), `examples/`, this documentation, the GitHub Action |
+| **Published here** | `cli/` (the `deltadata` command, also on [PyPI](https://pypi.org/project/deltadata/)), `examples/`, this documentation, the GitHub Action |
 | **Hosted, not published** | The analysis engine, the web UI, `/api/v1/compare`'s implementation |
 
 You need a running DeltaData API (the [hosted demo](https://delta-data.replit.app/)
@@ -161,20 +161,13 @@ backend error string.
 The CLI lives in [`cli/`](cli/) as an installable Python package that talks
 to the API over HTTP — it never touches the analysis engine directly.
 
-The first PyPI release is pending. Until
-[`deltadata` is live on PyPI](https://pypi.org/project/deltadata/), install
-the same packaged CLI directly from this repository:
-
-```bash
-pip install "git+https://github.com/nikhiljii/Delta-Data.git#subdirectory=cli"
-```
-
-After the first release succeeds, the supported no-clone installation will
-be:
-
 ```bash
 pip install deltadata
 ```
+
+Installs the `deltadata` command straight from [PyPI](https://pypi.org/project/deltadata/)
+— no repo clone required. (Contributing to the CLI itself? See
+[CONTRIBUTING.md](CONTRIBUTING.md) for an editable install from source.)
 
 Contributing to the CLI itself? See
 [CONTRIBUTING.md](CONTRIBUTING.md) for an editable install from source.
@@ -253,8 +246,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install DeltaData CLI
-        # Switch to `pip install deltadata` after the first PyPI release.
-        run: pip install "git+https://github.com/nikhiljii/Delta-Data.git#subdirectory=cli"
+        run: pip install deltadata
 
       - name: Run behavioral diff
         env:

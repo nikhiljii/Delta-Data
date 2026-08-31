@@ -13,7 +13,7 @@ the CLI reaches 1.0.0.
 
 ## [0.1.0] - 2026-08-27
 
-Initial public release candidate, packaged for PyPI as `deltadata`.
+Initial public release on PyPI as `deltadata`.
 
 ### Added
 
