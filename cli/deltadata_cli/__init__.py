@@ -4,4 +4,4 @@ This package never reimplements the analysis engine: every `compare` call is
 a plain HTTP request to a running DeltaData API instance.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

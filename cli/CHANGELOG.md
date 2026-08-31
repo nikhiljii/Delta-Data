@@ -11,6 +11,13 @@ the CLI reaches 1.0.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-31
+
+### Fixed
+
+- Updated the package description after publication so PyPI leads with the
+  working `pip install deltadata` command.
+
 ## [0.1.0] - 2026-08-27
 
 Initial public release on PyPI as `deltadata`.
