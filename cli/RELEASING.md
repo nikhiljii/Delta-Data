@@ -4,10 +4,14 @@ The `deltadata` CLI ([PyPI](https://pypi.org/project/deltadata/)) ships
 independently from the hosted engine/API — bumping the CLI's version never
 requires a change to the private engine repo, and vice versa.
 
-Publishing uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/)
-(OpenID Connect), not a stored API token: pushing a `cli-v*` tag makes
-GitHub Actions build the package and PyPI verifies the workflow run
-directly. No PyPI secret exists in this repo.
+Routine publishing is designed to use
+[PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (OpenID
+Connect), not a stored API token: pushing a `cli-v*` tag makes GitHub Actions
+build the package and PyPI verify the workflow run directly. The initial
+`0.1.x` releases were bootstrapped with a temporary token because the
+account-side publisher identity did not match; that token must be revoked on
+PyPI and deleted from Replit Secrets immediately after use. No PyPI token
+belongs in the repository or long-lived workspace configuration.
 
 ## One-time setup for automated releases
 

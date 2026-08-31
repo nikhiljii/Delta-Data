@@ -169,9 +169,6 @@ Installs the `deltadata` command straight from [PyPI](https://pypi.org/project/d
 — no repo clone required. (Contributing to the CLI itself? See
 [CONTRIBUTING.md](CONTRIBUTING.md) for an editable install from source.)
 
-Contributing to the CLI itself? See
-[CONTRIBUTING.md](CONTRIBUTING.md) for an editable install from source.
-
 ```bash
 deltadata compare \
   --before before.sql \
