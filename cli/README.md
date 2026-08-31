@@ -10,13 +10,21 @@ codes, and CI examples.
 
 ## Install
 
+The first PyPI release is pending. Until the
+[`deltadata` project is live](https://pypi.org/project/deltadata/), install
+the packaged CLI from GitHub:
+
+```bash
+pip install "git+https://github.com/nikhiljii/Delta-Data.git#subdirectory=cli"
+```
+
+Once the release succeeds, use:
+
 ```bash
 pip install deltadata
 ```
 
-This installs the `deltadata` command from [PyPI](https://pypi.org/project/deltadata/)
-— no repo clone needed. See [`RELEASING.md`](RELEASING.md) for how new
-versions ship.
+See [`RELEASING.md`](RELEASING.md) for the release status and process.
 
 ## Quick start
 

@@ -9,19 +9,22 @@ Publishing uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishe
 GitHub Actions build the package and PyPI verifies the workflow run
 directly. No PyPI secret exists in this repo.
 
-## One-time setup (already done for this repo)
+## One-time setup (pending verification)
 
-A repo maintainer registered a trusted publisher on PyPI for the `deltadata`
-project, pointing at:
+Before the first release, a repo maintainer must register a pending trusted
+publisher on PyPI for the `deltadata` project with these exact values:
 
-- Repository owner/name: `nikhiljii/Delta-Data`
-- Workflow filename: `.github/workflows/publish-cli.yml`
+- Project name: `deltadata`
+- Repository owner: `nikhiljii`
+- Repository name: `Delta-Data`
+- Workflow filename: `publish-cli.yml` (filename only)
 - Environment name: `pypi`
 
-This only needs to be done once (or again if the workflow file is renamed
-or moved). See PyPI's "Publishing" settings under the project, or
-"Pending publishers" on the account page if the project doesn't exist on
-PyPI yet.
+The initial workflow attempts reached the upload step but PyPI returned
+`invalid-publisher`, so this account-side entry is not yet verified. Check
+the saved entry under "Pending publishers" on the PyPI account page before
+retrying. Once a release succeeds, the setup only needs attention again if
+the repository, workflow filename, or environment changes.
 
 ## Cutting a release
 
