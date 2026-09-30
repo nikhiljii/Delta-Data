@@ -202,75 +202,39 @@ echo "exit code: $?"
 
 ## CI usage (GitHub Actions)
 
-The CLI is deliberately just a plain command — `deltadata compare ...` — so
-wiring it into CI needs nothing DeltaData-specific beyond installing it and
-setting two secrets.
+The workflow at `.github/workflows/deltadata.yml` detects the SQL files changed
+by each pull request. For an ordinary modified file, it compares the file at
+the base/head merge-base with the PR-head version. For a changed `after.sql`
+in a `before.sql` / `after.sql` pair, it compares the merge-base `before.sql`
+with the PR-head `after.sql`. A change only to `before.sql` is skipped because
+that file is the baseline, not the changed candidate.
 
-**Try the shipped demo first.** This repo includes a working workflow at
-`.github/workflows/deltadata.yml` that runs on `workflow_dispatch` (Actions
-tab → "DeltaData behavioral check" → "Run workflow") *and* automatically on
-any pull request that touches a `.sql` file. Either way it installs the CLI
-and runs it against the bundled `examples/count-distinct-vs-count` scenario
-against a live DeltaData API — it deliberately fails, because that scenario
-is a real HIGH-risk change, which is the point of running it. It always
-compares the same bundled before/after files regardless of which `.sql` file
-the PR actually changed; see below for pointing it at your own project's
-files instead. (Replit's GitHub connector isn't granted the `workflow` OAuth
-scope, so this one file has to be added to a fork/clone by hand — via
-GitHub's web editor, or a git push with a personal access token that has the
-`workflow` scope.)
+The check uses the CSV files next to each SQL file or in its direct `data/`
+subdirectory **from the trusted base revision**. For example,
+`reports/orders.sql` needs `reports/orders.csv` or
+`reports/data/orders.csv` already on the base branch; the CSV filename
+defines the SQL table name. Added or deleted SQL and changes without a
+matching baseline or sample CSV are reported as skipped, never substituted
+with bundled demo data. If no SQL file can be compared, the check passes
+ with a clear skip message. A HIGH or CRITICAL finding fails the check.
 
-**Turn it into a real PR gate for your own project** by pointing the same
-command at your own SQL/data instead of the bundled example, and switching
-the trigger to `pull_request`:
+`main` requires the GitHub Actions `deltadata` job (shown under the
+**DeltaData behavioral check** workflow) to pass before a pull request can
+merge. A failing or missing check blocks the merge; it is not just a warning.
+Resolve the reported behavioral regression and push an update to rerun the
+check. SQL pull requests from forks fail intentionally because the workflow
+cannot expose DeltaData credentials to untrusted branches; submit SQL changes
+from a branch in this repository instead.
 
-```yaml
-# .github/workflows/deltadata.yml -- adapt to your own files, not the demo above
-name: DeltaData behavioral check
-on:
-  pull_request:
-    paths:
-      - "sql/**/*.sql" # narrow this to wherever your tracked SQL actually lives
-
-jobs:
-  deltadata:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install DeltaData CLI
-        run: pip install deltadata
-
-      - name: Run behavioral diff
-        env:
-          DELTADATA_API_URL: ${{ secrets.DELTADATA_API_URL }}
-          DELTADATA_API_KEY: ${{ secrets.DELTADATA_API_KEY }}
-        run: |
-          deltadata compare \
-            --before sql/before.sql \
-            --after sql/after.sql \
-            --data sql/sample_orders.csv \
-            --fail-on high
-```
-
-`sql/before.sql`, `sql/after.sql`, and `sql/sample_orders.csv` are
-placeholders for wherever your project keeps its old/new query and sample
-data — DeltaData doesn't (yet) diff arbitrary changed files in a PR
-automatically, so this template always compares two fixed paths that you
-choose. Because `deltadata compare` exits non-zero when the risk threshold
-is exceeded (or the SQL fails to execute), this step fails the pull request
-check on its own once it points at real files — no extra scripting needed.
-The eventual PR workflow this sets up for:
-
-```text
-Developer changes SQL -> opens PR -> DeltaData detects the SQL change
-  -> runs BEFORE and AFTER -> compares behavior -> reports risk
-  -> PR check PASS / REVIEW / FAIL
-```
+The workflow runs the trusted base revision of its helper
+(`.github/scripts/deltadata_pr.py`) and installs the released
+`deltadata==0.1.2` CLI; it reads PR SQL only as data and never executes
+PR-head code. It also checks that the CLI returned a complete result.
+Non-SQL PRs pass. SQL PRs from forks fail explicitly without exposing
+DeltaData credentials. For same-repository SQL PRs, configure
+`DELTADATA_API_URL` and `DELTADATA_API_KEY` as repository secrets. To use
+the workflow in another repository, copy both the workflow and its trusted
+helper.
 
 ## Security & data-handling
 
