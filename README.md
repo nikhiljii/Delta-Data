@@ -216,7 +216,7 @@ subdirectory **from the trusted base revision**. For example,
 defines the SQL table name. Added or deleted SQL and changes without a
 matching baseline or sample CSV are reported as skipped, never substituted
 with bundled demo data. If no SQL file can be compared, the check passes
- with a clear skip message. A HIGH or CRITICAL finding fails the check.
+with a clear skip message. A HIGH or CRITICAL finding fails the check.
 
 `main` requires the GitHub Actions `deltadata` job (shown under the
 **DeltaData behavioral check** workflow) to pass before a pull request can
