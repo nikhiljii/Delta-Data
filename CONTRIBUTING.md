@@ -75,6 +75,12 @@ deltadata compare \
 4. For anything touching the CLI's argument parsing, exit codes, or output
    format, call out any documentation (`README.md`, `cli/README.md`) that
    needs updating alongside the code.
+5. Wait for the **DeltaData behavioral check** (`deltadata` job) to pass.
+   This is required on `main`: a failing or missing check blocks the merge,
+   rather than merely warning. Fix reported HIGH/CRITICAL behavioral changes
+   and push an update to rerun it. For SQL changes, use a branch in this
+   repository; SQL pull requests from forks fail because secrets are not
+   shared with untrusted branches.
 
 ## Reporting bugs / requesting features
 
